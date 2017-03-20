@@ -68,8 +68,39 @@ void ShellSort(int a[], int n) {
 }
 
 //归并排序
-void MergeSort(int a[], int n) {
 
+void MS_Merge(int a[], int temp[], int start, int middle, int end) {
+
+    if (a[middle + 1] >= a[middle]) return;
+
+    int i = start, j = middle + 1, k = 0;
+    while (i <= middle && j <= end) {
+        if (a[i] <= a[j])
+            temp[k++] = a[i++];
+        else
+            temp[k++] = a[j++];
+    }
+
+    while (i <= middle) temp[k++] = a[i++];
+    while (j <= end) temp[k++] = a[j++];
+
+    for (int l = 0; l < k; ++l)
+        a[start + l] = temp[l];
+}
+
+void MS_Recursion(int a[], int temp[], int start, int end) {
+    if (start < end) {
+        int middle = (start + end) / 2;
+        MS_Recursion(a, temp, start, middle);
+        MS_Recursion(a, temp, middle + 1, end);
+        MS_Merge(a, temp, start, middle, end);
+    }
+}
+
+void MergeSort(int a[], int n) {
+    int *temp = (int *)malloc(sizeof(int) * n);
+    MS_Recursion(a, temp, 0, n - 1);
+    free(temp);
 }
 
 //快速排序
@@ -80,7 +111,7 @@ void QuickSort() {
 int main() {
     int n = 18;
     int a[] = {91, 75, 43, 6, 110, 73, 5, 12, 98, 189, 52, 73, 12, 0, 2, 79, 04, 89};
-    SelectionSort(a, n);
+    MergeSort(a, n);
     for (int i = 0; i < n; ++i) {
         cout<<a[i]<<endl;
     }
