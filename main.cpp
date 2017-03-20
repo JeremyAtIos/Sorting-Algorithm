@@ -71,8 +71,10 @@ void ShellSort(int a[], int n) {
 
 void MS_Merge(int a[], int temp[], int start, int middle, int end) {
 
+    //如果右边最小数都比左边最大数大，直接返回
     if (a[middle + 1] >= a[middle]) return;
 
+    //遍历左右两边序列，小的先插入temp
     int i = start, j = middle + 1, k = 0;
     while (i <= middle && j <= end) {
         if (a[i] <= a[j])
@@ -81,9 +83,11 @@ void MS_Merge(int a[], int temp[], int start, int middle, int end) {
             temp[k++] = a[j++];
     }
 
+    //剩下的插入temp
     while (i <= middle) temp[k++] = a[i++];
     while (j <= end) temp[k++] = a[j++];
 
+    //将temp中的数据复制到原序列中
     for (int l = 0; l < k; ++l)
         a[start + l] = temp[l];
 }
@@ -98,8 +102,13 @@ void MS_Recursion(int a[], int temp[], int start, int end) {
 }
 
 void MergeSort(int a[], int n) {
+    //用于复用的临时数组
     int *temp = (int *)malloc(sizeof(int) * n);
+
+    //递归调用
     MS_Recursion(a, temp, 0, n - 1);
+
+    //释放指针
     free(temp);
 }
 
