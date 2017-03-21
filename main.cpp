@@ -68,7 +68,6 @@ void ShellSort(int a[], int n) {
 }
 
 //归并排序
-
 void MS_Merge(int a[], int temp[], int start, int middle, int end) {
 
     //如果右边最小数都比左边最大数大，直接返回
@@ -113,14 +112,58 @@ void MergeSort(int a[], int n) {
 }
 
 //快速排序
-void QuickSort() {
+int QS_Partition(int a[], int start, int end) {
 
+    //保存第一个数为分界数
+    int key = a[start];
+
+    //开始点和结束点
+    int i = start, j = end;
+
+    //当开始点与结束点相遇时结束遍历
+    while (i < j) {
+
+        //小细节
+        //将第一个数当做分界数，并且保存到key，第一个数就可以作为一个临时变量用于存储比分界数小的元素，因此先 从后往前 遍历更好
+        //如果是将最后一个数当做分界数，那么先 从前往后 遍历更好
+
+        //从后往前遍历找到第一个比分界数小的元素直到i、j相遇，然后后赋值到i的位置，同时i+1
+        while (i < j && a[j] >= key) --j;
+        if (i < j)
+            a[i++] = a[j];
+
+        //从后往前遍历找到第一个比分界数大的元素直到i、j相遇，然后后赋值到j的位置，同时j-1
+        while (i < j && a[i] <= key) ++i;
+        if (i < j)
+            a[j--] = a[i];
+    }
+
+    //将分界数赋值到分界点
+    a[i] = key;
+
+    //返回分界点位置
+    return i;
+}
+
+void QS_Recursion(int a[], int start, int end) {
+    if (start < end) {
+        //默认以第一个数为分界数，找到分界点
+        int index = QS_Partition(a, start, end);
+
+        //对分界点左右两边进行递归调用
+        QS_Recursion(a, start, index - 1);
+        QS_Recursion(a, index + 1, end);
+    }
+}
+
+void QuickSort(int a[], int n) {
+    QS_Recursion(a, 0, n - 1);
 }
 
 int main() {
     int n = 18;
-    int a[] = {91, 75, 43, 6, 110, 73, 5, 12, 98, 189, 52, 73, 12, 0, 2, 79, 04, 89};
-    MergeSort(a, n);
+    int a[] = {91, 0, 43, 6, 110, 73, 5, 12, 98, 189, 52, 73, 12, 0, 2, 79, 04, 89};
+    QuickSort(a, n);
     for (int i = 0; i < n; ++i) {
         cout<<a[i]<<endl;
     }
